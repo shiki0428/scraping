@@ -1,5 +1,5 @@
-
-directory_path = "/Users/shikishiki/Desktop/screping/companies/"
+#ディレクトリ作成　ダウンロード
+directory_path = "/Users/shikishiki/dev/XBRL/companies/"
 #ここに保存んしたいフォルダー名とpath を書く　path は調べて！！
 
 import datetime
@@ -7,7 +7,7 @@ import requests
 import pandas as pd
 import os
 start_date = datetime.date(2022, 5, 1)
-end_date = datetime.date(2022, 6,30)
+end_date = datetime.date(2022, 5,30)
 
 period = end_date - start_date
 period = int(period.days)

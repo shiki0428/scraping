@@ -91,7 +91,7 @@ def download_xbrl_in_zip(securities_report_doc_list, number_of_lists):
         print(doc_id, ":", index + 1, "/", number_of_lists)
         url = "https://disclosure.edinet-fsa.go.jp/api/v1/documents/" + doc_id  # エンドポイントには，docID(書類管理番号)も入る
         params = {"type" : 1}  # リクエストパラメーターは，XBRLファイルを指定する
-        filename = "/Users/shikishiki/Desktop/zip/" + doc_id + ".zip"                                       # 保存場所を指定する（フォルダは必要）
+        filename = "/Users/shikishiki/dev/XBRL/zip/" + doc_id + ".zip"                                       # 保存場所を指定する（フォルダは必要）
         res = requests.get(url, params=params, stream = True)
         # 指定したパスのファイルを新規作成する。withでブロック終わりに閉じる
         if res.status_code == 200:
@@ -103,7 +103,7 @@ def download_xbrl_in_zip(securities_report_doc_list, number_of_lists):
 
 def main():
     start_date = datetime.date(2022, 5, 1)   # 開始日を決める
-    end_date = datetime.date(2022, 8, 31)    # 終了日を決める
+    end_date = datetime.date(2022, 5, 31)    # 終了日を決める
     day_list = make_day_list(start_date, end_date) # day_listの作成
     securities_report_doc_list = make_doc_id_list(day_list)
     number_of_lists = len(securities_report_doc_list)

@@ -76,7 +76,7 @@ def insert_df(md_a_contents: list) -> list:
 
 full_list = []
 company_list = []
-for foldername, subfolders, filenames in os.walk('/Users/shikishiki/Desktop/xbrl'):
+for foldername, subfolders, filenames in os.walk('/Users/shikishiki/dev/XBRL/zip'):
     is_value = False
 
     # テキストを保存するための空の箱を用意する（ループ毎に空になる）
@@ -109,6 +109,7 @@ for foldername, subfolders, filenames in os.walk('/Users/shikishiki/Desktop/xbrl
         print(len(htm_contents))#所有
         num = 0
         for tag in htm_contents:
+
             value_list = []
             num += 1
             # print(i)
