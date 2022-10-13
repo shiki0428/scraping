@@ -1,13 +1,33 @@
-#ディレクトリ作成　ダウンロード
-directory_path = "/Users/shikishiki/dev/XBRL/companies/"
+
 #ここに保存んしたいフォルダー名とpath を書く　path は調べて！！
 
 import datetime
 import requests
 import pandas as pd
+
+
+#ディレクトリ作成　ダウンロード
+
+from dotenv import load_dotenv
 import os
-start_date = datetime.date(2022, 5, 1)
-end_date = datetime.date(2022, 5,30)
+load_dotenv()
+
+directory_zip = os.getenv('DIRCTORY_ZIP_PATH')
+directory_path = os.getenv('DIRCTORY_PATH')
+if not os.path.exists(directory_path): 
+    os.makedirs(directory_path)
+if not os.path.exists(directory_zip): 
+    os.makedirs(directory_zip)
+
+
+start_date = os.getenv('START_DATE')
+end_date = os.getenv('END_DATE')
+
+start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+start_date = datetime.date(start_date.year, start_date.month,start_date.day)
+end_date = datetime.date(end_date.year, end_date.month,end_date.day)
 
 period = end_date - start_date
 period = int(period.days)
@@ -40,7 +60,7 @@ for day in day_list:
                         '証券コード':json_data["results"][num]["secCode"],
                         '日付': day             }
 
-            dir_path = directory_path + "{}/".format(edi['会社名'])
+            dir_path = directory_path #+ "{}/".format(json_data["results"][num]["docID"])
             if not os.path.exists(dir_path): 
                 os.mkdir(dir_path)
             url = "https://disclosure.edinet-fsa.go.jp/api/v1/documents/" + json_data["results"][num]["docID"]
@@ -52,15 +72,7 @@ for day in day_list:
                 with open(filename, 'wb') as file:
                     for chunk in res.iter_content(chunk_size=1024):
                         file.write(chunk)
-
-            # exit()
             report_list.append(edi)
-
-# df = pd.DataFrame(report_list)
-# print(df)
-
-# docid =df[df['証券コード'] == '83160']['docID']
-# print(docid)
 
 
 

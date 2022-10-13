@@ -7,24 +7,11 @@ from bs4 import BeautifulSoup
 import pandas as pd # 消してもいいかも
 import sqlite3
 
-# データベースを作成する場所を指定する
-
-os.chdir('/Users/shikishiki/Desktop/PythonDB')
-
-
-# Sample.dbに接続する（自動的にコミットするようにする）
-conn = sqlite3.connect("Sample.db", isolation_level=None)
-
-# テーブルを作成する
-# code text
-
-# sql="""
-# CREATE TABLE ShareHolderComposition(
-#  docID VARCHAR(20),
-#  md TEXT
-# );
-# """
-# conn.execute(sql)
+from dotenv import load_dotenv
+import os
+load_dotenv()
+directory_zip = os.getenv('DIRCTORY_ZIP_PATH')
+directory_path = os.getenv('DIRCTORY_PATH')
 
 # 正規表現をつくる(htmで終わる)
 
@@ -76,15 +63,13 @@ def insert_df(md_a_contents: list) -> list:
 
 full_list = []
 company_list = []
-for foldername, subfolders, filenames in os.walk('/Users/shikishiki/dev/XBRL/zip'):
+for foldername, subfolders, filenames in os.walk(directory_zip):
     is_value = False
 
     # テキストを保存するための空の箱を用意する（ループ毎に空になる）
-
     b = ""
 
     # カレントディレクトリの全ファイルをループする
-
     for edi_filename in os.listdir(foldername):
 
         mo = pattern.search(edi_filename)
@@ -152,10 +137,6 @@ for foldername, subfolders, filenames in os.walk('/Users/shikishiki/dev/XBRL/zip
     # if not is_value and 'PublicDoc/' in foldername[8:] :        
     #     company_list.append(foldername)
     
-                
-
-
-
 for l,i in enumerate(full_list) :
     print(l,len(i))
     print(i)
@@ -164,47 +145,3 @@ print(len(full_list))
 # print(len(company_list))  
 # for i in company_list:     
 #     print(i)
-
-
-#         md_a_contents = extract_md_a_contents(htm_contents)
-
-#         md_a_df = insert_df(md_a_contents)
-
-
-#         # md_a_dfがemptydataならばスキップする
-#         if not md_a_df:
-#             continue
-
-
-#         md_a_df_text = ':'.join(md_a_df)        # listになっているので結合して文字列にする
-
-
-#         b= b +  md_a_df_text.replace('"', '')      # テキストの中に(")が入っていると文字列の認識が上手くできないため除いた上で加える
-
-
-#     # データを登録する
-
-#     # bがemptydataならばスキップする
-
-#     if not b:
-#             continue
-    
-#     test = foldername.lstrip('/Users/shikishiki/Desktop/xbrl')
-
-#     code = test.rsplit('/Users/shikishiki/Desktop/PublicDoc') # listになっているので，１つ目を取り出す
-
-#     a = code[0]
-
-#     print(a)
-
-#     conn.execute(f'INSERT INTO MD VALUES("{a}","{b}")') 
-        
-
-# conn.close()
-
-
-
-        
-
-
-
