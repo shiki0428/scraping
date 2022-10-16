@@ -3,11 +3,15 @@
 
 import datetime
 import requests
-import pandas as pd
+import pandas as pd,sqlite3
 
+# Sample.dbに接続する（自動的にコミットするようにする）
+conn = sqlite3.connect("EDINET.db", isolation_level=None)
+cur = conn.cursor()
+
+sql = 'INSERT INTO company (docID,company_name) VALUES(?,?)'
 
 #ディレクトリ作成　ダウンロード
-
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -54,7 +58,7 @@ for day in day_list:
 	#ordinance_code=010かつform_code=030000が有価証券報告書になります
         if ordinance_code == "010" and  form_code =="030000" :
             company_name=json_data["results"][num]["filerName"]
-            edi={ '会社名':company_name,
+            edi= { '会社名':company_name,
                         '書類名':json_data["results"][num]["docDescription"],           
                         'docID':json_data["results"][num]["docID"],
                         '証券コード':json_data["results"][num]["secCode"],
@@ -68,11 +72,17 @@ for day in day_list:
             filename =  dir_path + json_data["results"][num]["docID"] + ".zip"
             res = requests.get(url, params=params ,stream=True)
 
+            cur.execute(sql,[edi['docID'],edi['会社名']])
+            
+
             if res.status_code == 200:
                 with open(filename, 'wb') as file:
                     for chunk in res.iter_content(chunk_size=1024):
                         file.write(chunk)
             report_list.append(edi)
+
+
+conn.close()
 
 
 
