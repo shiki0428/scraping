@@ -44,6 +44,7 @@ day_list.append(end_date)
 
 #結果を格納するための空のリストを用意します
 report_list =[]
+num = 0
 #日付リストの期間に提出された書類のメタデータを取得してjson形式に変換します
 for day in day_list:
     url = "https://disclosure.edinet-fsa.go.jp/api/v1/documents.json"
@@ -71,11 +72,15 @@ for day in day_list:
             params = {"type": 1}
             filename =  dir_path + json_data["results"][num]["docID"] + ".zip"
             res = requests.get(url, params=params ,stream=True)
-
-            cur.execute(sql,[edi['docID'],edi['会社名']])
             
+            try:
+                cur.execute(sql,[edi['docID'],edi['会社名']])           
+            except:
+                pass 
 
             if res.status_code == 200:
+                num += 1
+                print(num)
                 with open(filename, 'wb') as file:
                     for chunk in res.iter_content(chunk_size=1024):
                         file.write(chunk)
