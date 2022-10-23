@@ -2,7 +2,7 @@
 
 ## 環境ファイルの設定  
 .env    
-DIRCTORY_PATH = #apiでダウンロードした情報格納ディレクトリpath 
+DIRCTORY_PATH = #apiでダウンロードした情報格納ディレクトリpath  
 DIRCTORY_ZIP_PATH = zip解凍先path  
 #FORMAT:YYYY-MM-DD  
 START_DATE = '2021-05-01'  
