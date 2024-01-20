@@ -6,7 +6,7 @@ import requests, datetime, os, csv, sqlite3
 
 # データベースを作成する場所を指定する
 
-os.chdir('/Users/shikishiki/Desktop/PythonDB')
+os.chdir("C:/Users/金城諒洋/OneDrive/DB/")
 
 
 # Sample.dbに接続する（自動的にコミットするようにする）
@@ -15,14 +15,14 @@ conn = sqlite3.connect("Sample.db", isolation_level=None)
 # テーブルを作成する
 # code text
 
-# sql="""
-# CREATE TABLE LIST(
-#  docID VARCHAR(20),
-#  filerName TEXT,
-#  docDescription TEXT
-# );
-# """
-# conn.execute(sql)
+sql="""
+CREATE TABLE LIST(
+ docID VARCHAR(20),
+ filerName TEXT,
+ docDescription TEXT
+);
+"""
+conn.execute(sql)
 
 
 # day_listの作成（関数）
@@ -46,9 +46,9 @@ def make_day_list(start_date, end_date):
 
 def make_doc_id_list(day_list):
     securities_report_doc_list= []
-    output_file = open('D:\\trial\\Data\\list.csv', 'w', newline='')    # Fileオブジェクトの生成
+    output_file = open('C:/Users/金城諒洋/OneDrive/DB/list.csv', 'w', newline='')    # Fileオブジェクトの生成
     output_writer = csv.writer(output_file)                  # Writerオブジェクトを生成
-    output_writer.writerow(["docID", "filerName", "docDescription"]) # 項目の作成
+    output_writer.writerow(["docID", "filerName", "docDescription"]) # 項目の作成 二次元配列？
     for index, day in enumerate(day_list):
         url = 'https://disclosure.edinet-fsa.go.jp/api/v1/documents.json' # 書類一覧APIのエンドポイント
         params = {'date' : day, 'type': 2}
@@ -56,7 +56,7 @@ def make_doc_id_list(day_list):
         res = requests.get(url, params = params)
         json_data = res.json()                                    # resはResponseオブジェクトなので，resからjsonデータを格納する
         print(day)
-        
+
 
         for num in range(len(json_data["results"])):
 
@@ -78,7 +78,7 @@ def make_doc_id_list(day_list):
                 c = json_data["results"][num]["docDescription"]
 
                 conn.execute(f'INSERT INTO LIST VALUES("{a}", "{b}", "{c}")')
-              
+
 
     output_file.close()
 
@@ -91,7 +91,7 @@ def download_xbrl_in_zip(securities_report_doc_list, number_of_lists):
         print(doc_id, ":", index + 1, "/", number_of_lists)
         url = "https://disclosure.edinet-fsa.go.jp/api/v1/documents/" + doc_id  # エンドポイントには，docID(書類管理番号)も入る
         params = {"type" : 1}  # リクエストパラメーターは，XBRLファイルを指定する
-        filename = "/Users/shikishiki/dev/XBRL/zip/" + doc_id + ".zip"                                       # 保存場所を指定する（フォルダは必要）
+        filename = "C:/Users/金城諒洋/OneDrive/DB/zip/" + doc_id + ".zip"                                       # 保存場所を指定する（フォルダは必要）
         res = requests.get(url, params=params, stream = True)
         # 指定したパスのファイルを新規作成する。withでブロック終わりに閉じる
         if res.status_code == 200:
@@ -102,8 +102,8 @@ def download_xbrl_in_zip(securities_report_doc_list, number_of_lists):
 # 実行するmain()
 
 def main():
-    start_date = datetime.date(2022, 5, 1)   # 開始日を決める
-    end_date = datetime.date(2022, 5, 31)    # 終了日を決める
+    start_date = datetime.date(2021, 9, 1)   # 開始日を決める
+    end_date = datetime.date(2022, 8, 31)    # 終了日を決める
     day_list = make_day_list(start_date, end_date) # day_listの作成
     securities_report_doc_list = make_doc_id_list(day_list)
     number_of_lists = len(securities_report_doc_list)
@@ -121,12 +121,3 @@ def main():
 
 
 main()
-
-        
-
-            
-        
-
-
-
-
